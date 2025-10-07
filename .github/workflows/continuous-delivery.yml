@@ -54,6 +54,6 @@ jobs:
       - name: Deploy para o Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: projetofiapcg
+          app-name: projetofiapgames
           slot-name: production
           package: ./publish
