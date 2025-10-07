@@ -14,7 +14,7 @@ public static class InfrastructureModule
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddDbContext(configuration)
+            .AddDbContext()
             .AddRepositories()
             .AddUnitOfWork()
             .AddElasticSearch(configuration);
@@ -22,9 +22,9 @@ public static class InfrastructureModule
         return services;
     }
 
-    private static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddDbContext(this IServiceCollection services)
     {
-        string connectionString = configuration.GetConnectionString("DefaultConnection")!;
+        string connectionString = Environment.GetEnvironmentVariable("FiapCloudGamesGamesConnectionString")!;
 
         services.AddDbContext<FiapCloudGamesGamesDbContext>(options => options.UseSqlServer(connectionString));
 
