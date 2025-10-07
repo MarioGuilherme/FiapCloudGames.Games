@@ -1,7 +1,7 @@
 # FiapCloudGames.Games
 
 ## 📌 Objetivos
-Microsserviço de pagamentos do Monólito [FiapCloudGames](https://github.com/MarioGuilherme/FiapCloudGames) que trata todas as regras e lógicas pertinente ao escopo de pagamento dos pedidos de compras, juntamente com o sua base de dados e também simulando uma integração com o PagSeguro e envio de notificação via e-mail com o SendGrid.
+Microsserviço de pagamentos do Monólito [FiapCloudGames](https://github.com/MarioGuilherme/FiapCloudGames) que trata todas as regras e lógicas pertinente ao escopo de jogos, compras, pedidos e recomendações de jogos, juntamente com o sua base de dados, com integração com ElasticSearch e recomendações e pesquisas inteligentes de jogos pelo usuário e seu histório de compra.
 
 ## 🚀 Instruções de uso
 Faça o clone do projeto e já acesse a pasta do projeto clonado:
