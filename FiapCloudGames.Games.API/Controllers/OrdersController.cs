@@ -33,39 +33,6 @@ public class OrdersController(IOrderService orderService) : ControllerBase
     public async Task<IActionResult> CreateForGameIds([FromBody] HashSet<int> gamesIds)
     {
         await _orderService.CreateForGameIdsAsync(User.UserId(), gamesIds);
-        return NoContent();
-    }
-
-    [HttpPatch("{orderId}/update-paymentId/{paymentId}")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdatePaymentIdAsync(int orderId, int paymentId)
-    {
-        await _orderService.UpdatePaymentIdAsync(orderId, paymentId);
-        return NoContent();
-    }
-
-    [HttpPatch("{orderId}/unlock-games")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UnlockGamesFromOrderToUser(int orderId)
-    {
-        await _orderService.UnlockGamesFromOrderToUserAsync(orderId);
-        return NoContent();
-    }
-
-    [HttpPatch("{orderId}/cancel")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Cancel(int orderId)
-    {
-        await _orderService.CancelByIdAsync(orderId);
-        return NoContent();
+        return Accepted();
     }
 }

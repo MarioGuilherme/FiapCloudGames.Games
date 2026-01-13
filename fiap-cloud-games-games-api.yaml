@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fiap-cloud-games-games
+  labels:
+    app: fiap-cloud-games-games
+spec:
+  containers:
+    - name: fiap-cloud-games-games
+      image: marioguilhermedev/fiap-cloud-games-games

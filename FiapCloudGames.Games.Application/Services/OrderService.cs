@@ -7,12 +7,15 @@ using FiapCloudGames.Games.Infrastructure.ElasticSearch.Models;
 using FiapCloudGames.Games.Infrastructure.ElasticSearch;
 using FiapCloudGames.Games.Infrastructure.Persistence;
 using Serilog;
+using FiapCloudGames.Games.Domain.Events;
+using FiapCloudGames.Games.Domain.Messaging;
 
 namespace FiapCloudGames.Games.Application.Services;
 
-public class OrderService(IUnitOfWork unitOfWork, ElasticsearchClient elasticsearchClient) : IOrderService
+public class OrderService(IUnitOfWork unitOfWork, IEventPublisher eventPublisher, ElasticsearchClient elasticsearchClient) : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IEventPublisher _eventPublisher = eventPublisher;
     private readonly IElasticClient<GameElasticSearchModel> _elasticClient = new ElasticClient<GameElasticSearchModel>(elasticsearchClient);
 
     public async Task CancelByIdAsync(int orderId)
@@ -55,11 +58,14 @@ public class OrderService(IUnitOfWork unitOfWork, ElasticsearchClient elasticsea
         if (order.Games.Count == 0)
         {
             Log.Warning("Nenhum jogo presente na lista não foi comprado o usuário {userId}", userId);
-            return RestResponse.Success(); // Se nenhum jogo, ignora a compra
+            return RestResponse.Success();
         }
 
         await _unitOfWork.Orders.CreateAsync(order);
         await _unitOfWork.CompleteAsync();
+
+        OrderCreatedEvent orderCreatedEvent = new(order.OrderId, order.UserId, order.Games.Sum(g => g.Price));
+        await _eventPublisher.PublishAsync(orderCreatedEvent, "order.created");
 
         Log.Information("Pedido {orderId} criado com sucesso para o usuário {userId}", order.OrderId, userId);
         return RestResponse.Success();

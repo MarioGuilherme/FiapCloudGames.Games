@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-cloud-games-games-api
+  labels:
+    app: fiap-cloud-games-games-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiap-cloud-games-games-api
+  template:
+    metadata:
+      labels:
+        app: fiap-cloud-games-games-api
+    spec:
+      containers:
+        - name: fiap-cloud-games-games-api
+          image: marioguilhermedev/fiap-cloud-games-games
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+          envFrom:
+            - secretRef:
+                name: aws-credentials
+            - configMapRef:
+                name: fiap-cloud-games-games-config
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

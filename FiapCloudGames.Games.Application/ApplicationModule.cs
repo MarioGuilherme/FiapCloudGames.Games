@@ -1,5 +1,6 @@
 ﻿using FiapCloudGames.Games.Application.Interfaces;
 using FiapCloudGames.Games.Application.Services;
+using FiapCloudGames.Games.Application.Subscribers;
 using FiapCloudGames.Games.Application.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -16,10 +17,18 @@ public static class ApplicationModule
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddSubscribers()
             .AddFluentValidation()
             .AddAuthentication(configuration)
             .AddApplicationServices();
 
+        return services;
+    }
+
+    private static IServiceCollection AddSubscribers(this IServiceCollection services)
+    {
+        services.AddHostedService<PaidOrderSubscriber>();
+        services.AddHostedService<OrderPendingPaymentCreatedSubscriber>();
         return services;
     }
 

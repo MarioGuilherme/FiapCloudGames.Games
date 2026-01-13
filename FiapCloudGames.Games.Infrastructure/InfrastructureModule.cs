@@ -1,11 +1,15 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
+using FiapCloudGames.Games.Domain.Messaging;
 using FiapCloudGames.Games.Domain.Repositories;
+using FiapCloudGames.Games.Infrastructure.Messaging.RabbitMq;
 using FiapCloudGames.Games.Infrastructure.Persistence;
 using FiapCloudGames.Games.Infrastructure.Persistence.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FiapCloudGames.Games.Infrastructure;
 
@@ -14,6 +18,7 @@ public static class InfrastructureModule
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddMessageBroker(configuration)
             .AddDbContext()
             .AddRepositories()
             .AddUnitOfWork()
@@ -22,9 +27,20 @@ public static class InfrastructureModule
         return services;
     }
 
+    private static IServiceCollection AddMessageBroker(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.Configure<RabbitMqOptions>(configuration.GetSection("RabbitMQ"));
+        services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
+        services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
+
+        return services;
+    }
+
     private static IServiceCollection AddDbContext(this IServiceCollection services)
     {
-        string connectionString = Environment.GetEnvironmentVariable("FiapCloudGamesGamesConnectionString")!;
+        string connectionString = "Server=(localdb)\\mssqllocaldb;Database=FiapCloudGamesGames;Trusted_Connection=True;MultipleActiveResultSets=true";// Environment.GetEnvironmentVariable("FiapCloudGamesUsersConnectionString")!;
 
         services.AddDbContext<FiapCloudGamesGamesDbContext>(options => options.UseSqlServer(connectionString));
 
