@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{7F60C6EF-63F3-4F35-BED4-B0B0C96A5256}"
 	ProjectSection(SolutionItems) = preProject
 		games-api.yaml = games-api.yaml
+		sqlserver.yaml = sqlserver.yaml
 	EndProjectSection
 EndProject
 Global
