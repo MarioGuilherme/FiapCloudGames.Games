@@ -60,7 +60,7 @@ public class PaidOrderSubscriber(IServiceProvider serviceProvider,
 
     private async Task ProcessPaidOrderAsync(PaidOrderEvent paidOrderEvent)
     {
-        Log.Information("Timer trigger disparada às {DateTime}", DateTime.Now);
+        Log.Information("Subscriber {SubscriberName} iniciado às {DateTime}", nameof(PaidOrderSubscriber), DateTime.Now);
 
         using IServiceScope scope = _serviceProvider.CreateScope();
         IOrderRepository orderRepository = scope.ServiceProvider.GetRequiredService<IOrderRepository>();
@@ -69,6 +69,6 @@ public class PaidOrderSubscriber(IServiceProvider serviceProvider,
         Order order = (await orderRepository.GetByIdTrackingAsync(paidOrderEvent.OrderId))!;
         await _eventPublisher.PublishAsync(new SendPendingEmailEvent(order.UserId, "Compra Paga", "Recebemos seu pagamento. Seus jogos estão disponível em sua biblioteca"), "send.pending.email");
 
-        Log.Information("Processamento do pedido de Id {OrderId} finalizado.", paidOrderEvent.OrderId);
+        Log.Information("Subscriber {SubscriberName} finalizado às {DateTime}", nameof(PaidOrderSubscriber), DateTime.Now);
     }
 }

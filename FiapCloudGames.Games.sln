@@ -13,12 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiapCloudGames.Games.Applic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiapCloudGames.Games.Tests", "FiapCloudGames.Games.Tests\FiapCloudGames.Games.Tests.csproj", "{DB88135B-17D0-467C-B006-C4D74EDFB5F2}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{7F60C6EF-63F3-4F35-BED4-B0B0C96A5256}"
 	ProjectSection(SolutionItems) = preProject
-		fiap-cloud-games-games-api.yaml = fiap-cloud-games-games-api.yaml
-		svc-fiap-cloud-games-games-api.yaml = svc-fiap-cloud-games-games-api.yaml
+		games-api.yaml = games-api.yaml
 	EndProjectSection
 EndProject
 Global
@@ -47,10 +44,6 @@ Global
 		{DB88135B-17D0-467C-B006-C4D74EDFB5F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB88135B-17D0-467C-B006-C4D74EDFB5F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB88135B-17D0-467C-B006-C4D74EDFB5F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

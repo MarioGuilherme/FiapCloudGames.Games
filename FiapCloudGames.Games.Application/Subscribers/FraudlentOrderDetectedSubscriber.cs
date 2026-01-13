@@ -54,12 +54,12 @@ public class FraudlentOrderDetectedSubscriber(IServiceProvider serviceProvider,
 
     private async Task ProcessFraudlentOrderDetectedAsync(FraudlentOrderDetectedEvent fraudlentOrderDetectedEvent)
     {
-        Log.Information("Timer trigger disparada às {DateTime}", DateTime.Now);
+        Log.Information("Subscriber {SubscriberName} iniciado às {DateTime}", nameof(FraudlentOrderDetectedSubscriber), DateTime.Now);
 
         using IServiceScope scope = _serviceProvider.CreateScope();
         IOrderService orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
         await orderService.CancelByIdAsync(fraudlentOrderDetectedEvent.OrderId);
 
-        Log.Information("Processamento do pedido de Id {OrderId} finalizado.", fraudlentOrderDetectedEvent.OrderId);
+        Log.Information("Subscriber {SubscriberName} finalizado às {DateTime}", nameof(FraudlentOrderDetectedSubscriber), DateTime.Now);
     }
 }

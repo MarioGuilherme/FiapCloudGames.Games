@@ -58,13 +58,13 @@ public class OrderPendingPaymentCreatedSubscriber(IServiceProvider serviceProvid
 
     private async Task ProcessPendingPaymentCreatedAsync(OrderPendingPaymentCreatedEvent orderPendingPaymentCreatedEvent)
     {
-        Log.Information("Timer trigger disparada às {DateTime}", DateTime.Now);
+        Log.Information("Subscriber {SubscriberName} iniciado às {DateTime}", nameof(OrderPendingPaymentCreatedSubscriber), DateTime.Now);
 
         using IServiceScope scope = _serviceProvider.CreateScope();
         IOrderService orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
         await orderService.UpdatePaymentIdAsync(orderPendingPaymentCreatedEvent.OrderId, orderPendingPaymentCreatedEvent.PaymentId);
         await _eventPublisher.PublishAsync(new SendPendingEmailEvent(orderPendingPaymentCreatedEvent.UserId, "Compra criada", "Sua compra foi criada e está pendente de pagamento"), "send.pending.email");
 
-        Log.Information("Processamento do pedido de Id {OrderId} finalizado.", orderPendingPaymentCreatedEvent.OrderId);
+        Log.Information("Subscriber {SubscriberName} finalizado às {DateTime}", nameof(OrderPendingPaymentCreatedSubscriber), DateTime.Now);
     }
 }
