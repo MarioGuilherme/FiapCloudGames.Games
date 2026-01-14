@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: games-config
+data:
+  ASPNETCORE_URLS: http://+:8080
+  RabbitMq__Host: rabbitmq
+  RabbitMq__Port: "5672"
+  RabbitMQ__Exchange: "fiap-cloud-games.exchange"
+  ElasticSearch__Uri: https://d327e6c564524901aa86c47bdc08376d.us-central1.gcp.cloud.es.io:443
+  ElasticSearch__DefaultIndex: games
+  Jwt__Issuer: FiapCloudGames.Users.API
+  Jwt__Audience: ClientFiapCloudGames

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FiapCloudGames.Games.Infrastructure;
 
@@ -19,7 +18,7 @@ public static class InfrastructureModule
     {
         services
             .AddMessageBroker(configuration)
-            .AddDbContext()
+            .AddDbContext(configuration)
             .AddRepositories()
             .AddUnitOfWork()
             .AddElasticSearch(configuration);
@@ -38,11 +37,10 @@ public static class InfrastructureModule
         return services;
     }
 
-    private static IServiceCollection AddDbContext(this IServiceCollection services)
+    private static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        string connectionString = "Server=sqlserver;Database=FiapCloudGamesGames;User Id=sa;Password=Adm1n23%;TrustServerCertificate=True";
+        string connectionString = configuration.GetConnectionString("DefaultConnection")!;
         services.AddDbContext<FiapCloudGamesGamesDbContext>(options => options.UseSqlServer(connectionString));
-
         return services;
     }
 
