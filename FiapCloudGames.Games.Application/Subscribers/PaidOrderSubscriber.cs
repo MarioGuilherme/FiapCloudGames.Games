@@ -49,7 +49,7 @@ public class PaidOrderSubscriber(IServiceProvider serviceProvider,
 
             using (LogContext.PushProperty("CorrelationId", ea.BasicProperties.CorrelationId))
             {
-                await ProcessPaidOrderAsync(paidOrderEvent);
+                await ProcessPaidOrderAsync(paidOrderEvent, ea.BasicProperties.CorrelationId!);
             }
 
             await channel.BasicAckAsync(ea.DeliveryTag, false);
@@ -58,7 +58,7 @@ public class PaidOrderSubscriber(IServiceProvider serviceProvider,
         await channel.BasicConsumeAsync(QUEUE, false, consumer, cancellationToken: stoppingToken);
     }
 
-    private async Task ProcessPaidOrderAsync(PaidOrderEvent paidOrderEvent)
+    private async Task ProcessPaidOrderAsync(PaidOrderEvent paidOrderEvent, string correlationId)
     {
         Log.Information("Subscriber {SubscriberName} iniciado às {DateTime}", nameof(PaidOrderSubscriber), DateTime.Now);
 
@@ -67,7 +67,7 @@ public class PaidOrderSubscriber(IServiceProvider serviceProvider,
         IOrderService orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
         await orderService.UnlockGamesFromOrderToUserAsync(paidOrderEvent.OrderId);
         Order order = (await orderRepository.GetByIdTrackingAsync(paidOrderEvent.OrderId))!;
-        await _eventPublisher.PublishAsync(new SendPendingEmailEvent(order.UserId, "Compra Paga", "Recebemos seu pagamento. Seus jogos estão disponível em sua biblioteca"), "send.pending.email");
+        await _eventPublisher.PublishAsync(new SendPendingEmailEvent(order.UserId, "Compra Paga", "Recebemos seu pagamento. Seus jogos estão disponível em sua biblioteca"), "send.pending.email", correlationId);
 
         Log.Information("Subscriber {SubscriberName} finalizado às {DateTime}", nameof(PaidOrderSubscriber), DateTime.Now);
     }

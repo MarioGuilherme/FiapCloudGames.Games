@@ -47,7 +47,7 @@ public class OrderPendingPaymentCreatedSubscriber(IServiceProvider serviceProvid
 
             using (LogContext.PushProperty("CorrelationId", ea.BasicProperties.CorrelationId))
             {
-                await ProcessPendingPaymentCreatedAsync(orderPaymentPendingCreatedEvent);
+                await ProcessPendingPaymentCreatedAsync(orderPaymentPendingCreatedEvent, ea.BasicProperties.CorrelationId!);
             }
 
             await channel.BasicAckAsync(ea.DeliveryTag, false);
@@ -56,14 +56,14 @@ public class OrderPendingPaymentCreatedSubscriber(IServiceProvider serviceProvid
         await channel.BasicConsumeAsync(QUEUE, false, consumer, cancellationToken: stoppingToken);
     }
 
-    private async Task ProcessPendingPaymentCreatedAsync(OrderPendingPaymentCreatedEvent orderPendingPaymentCreatedEvent)
+    private async Task ProcessPendingPaymentCreatedAsync(OrderPendingPaymentCreatedEvent orderPendingPaymentCreatedEvent, string correlationId)
     {
         Log.Information("Subscriber {SubscriberName} iniciado às {DateTime}", nameof(OrderPendingPaymentCreatedSubscriber), DateTime.Now);
 
         using IServiceScope scope = _serviceProvider.CreateScope();
         IOrderService orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
         await orderService.UpdatePaymentIdAsync(orderPendingPaymentCreatedEvent.OrderId, orderPendingPaymentCreatedEvent.PaymentId);
-        await _eventPublisher.PublishAsync(new SendPendingEmailEvent(orderPendingPaymentCreatedEvent.UserId, "Compra criada", "Sua compra foi criada e está pendente de pagamento"), "send.pending.email");
+        await _eventPublisher.PublishAsync(new SendPendingEmailEvent(orderPendingPaymentCreatedEvent.UserId, "Compra criada", "Sua compra foi criada e está pendente de pagamento"), "send.pending.email", correlationId);
 
         Log.Information("Subscriber {SubscriberName} finalizado às {DateTime}", nameof(OrderPendingPaymentCreatedSubscriber), DateTime.Now);
     }
