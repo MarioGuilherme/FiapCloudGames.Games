@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Executando o Job de Compilação
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Clonagem do código fonte
