@@ -11,6 +11,7 @@ jobs:
     name: Executando o Job de Compilação
     runs-on: self-hosted
 
+
     steps:
       - name: Clonagem do código fonte
         uses: actions/checkout@v4
